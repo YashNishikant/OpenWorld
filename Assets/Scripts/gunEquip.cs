@@ -10,10 +10,10 @@ public class gunEquip : MonoBehaviour
     RaycastHit hitGun;
     public float animationDelay = 0;
     public ParticleSystem muzzleFlash;
-    public ParticleSystem bulletTrail;
     public GameObject impactEffect;
     Animator gunAnimator;
     bool canShoot;
+
     void Start()
     {
         gunAnimator = GetComponent<Animator>();
@@ -39,7 +39,6 @@ public class gunEquip : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             muzzleFlash.Play();
-            bulletTrail.Play();
             gunAnimator.SetTrigger("Shoot");
 
             if (Physics.Raycast(maincamera.transform.position, maincamera.transform.TransformDirection(Vector3.forward), out hitGun, 200))
