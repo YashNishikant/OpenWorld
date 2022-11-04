@@ -22,6 +22,9 @@ public class PopulateLand : MonoBehaviour
             rangeZ = Random.Range(0, FindObjectOfType<GenerateWorld>().getLengthZ());
 
             if (Physics.Raycast(new Vector3(rangeX , 100, rangeZ), Vector3.down, out hit)){
+
+                Debug.Log(hit.transform.tag);
+
                 if ((Vector3.Angle(Vector3.up, hit.normal) < 25f) && !hit.transform.tag.Equals("Resource") && !hit.transform.tag.Equals("Player") && !hit.transform.tag.Equals("Water")) { 
                     Instantiate(items[Random.Range(0, items.Count)], hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal));
                 }

@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class GunController: MonoBehaviour
 {
-    [SerializeField] private GameObject player;
-    [SerializeField] private Camera maincamera;
-    private RaycastHit hitGun;
-    [SerializeField] private ParticleSystem muzzleFlash;
-    private bool canShoot;
+    [SerializeField] private GameObject bullet;
 
     void Start()
     {
@@ -26,22 +22,8 @@ public class GunController: MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
 
-            ParticleSystem p = Instantiate(muzzleFlash, transform.position + transform.forward, transform.rotation);
-            p.Play();
-
-            if (Physics.Raycast(maincamera.transform.position, maincamera.transform.TransformDirection(Vector3.forward), out hitGun, 200))
-            {
-
-            }
-
-            if (Physics.Raycast(maincamera.transform.position, maincamera.transform.TransformDirection(Vector3.forward), out hitGun, 200) && (hitGun.rigidbody))
-            {
-                hitGun.rigidbody.AddForce(player.transform.forward * 500);
-            }
-            else if (Physics.Raycast(maincamera.transform.position, maincamera.transform.TransformDirection(Vector3.forward), out hitGun, 200) && (hitGun.rigidbody))
-            {
-                hitGun.rigidbody.AddForce(player.transform.forward * 100);
-            }
+            GameObject p = Instantiate(bullet, transform.position, Quaternion.identity);
+            p.GetComponent<Rigidbody>().AddRelativeForce(transform.forward * 300, ForceMode.Impulse);
 
         }
     }
