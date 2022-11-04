@@ -2,35 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class gunEquip : MonoBehaviour
+public class GunController: MonoBehaviour
 {
-    public GameObject player;
-    public Camera maincamera;
-    float delay;
-    RaycastHit hitGun;
-    public float animationDelay = 0;
-    public ParticleSystem muzzleFlash;
-    public GameObject impactEffect;
-    Animator gunAnimator;
-    bool canShoot;
+    [SerializeField] private GameObject player;
+    [SerializeField] private Camera maincamera;
+    private RaycastHit hitGun;
+    [SerializeField] private ParticleSystem muzzleFlash;
+    private bool canShoot;
 
     void Start()
     {
-        gunAnimator = GetComponent<Animator>();
+        
     }
 
     void Update()
-    {
-        delay++;
-        if (delay == 10)
-        {
-            canShoot = true;
-            delay = 0;
-        }
-        if (canShoot)
-        {
-            shooting();
-        }
+    { 
+        shooting();
     }
 
     void shooting()
@@ -38,13 +25,13 @@ public class gunEquip : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            muzzleFlash.Play();
-            gunAnimator.SetTrigger("Shoot");
+
+            ParticleSystem p = Instantiate(muzzleFlash, transform.position + transform.forward, transform.rotation);
+            p.Play();
 
             if (Physics.Raycast(maincamera.transform.position, maincamera.transform.TransformDirection(Vector3.forward), out hitGun, 200))
             {
-                GameObject impact = Instantiate(impactEffect, hitGun.point, Quaternion.LookRotation(hitGun.normal)) as GameObject;
-                Destroy(impact, 0.1f);
+
             }
 
             if (Physics.Raycast(maincamera.transform.position, maincamera.transform.TransformDirection(Vector3.forward), out hitGun, 200) && (hitGun.rigidbody))
