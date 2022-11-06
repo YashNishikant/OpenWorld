@@ -37,8 +37,14 @@ public class GenerateWorld : MonoBehaviour
     [SerializeField]
     private GameObject manager;
 
+    float randomX;
+    float randomZ;
+
     void Start()
     {
+
+        randomX = Random.Range(0, 10);
+        randomZ = Random.Range(0, 10);
 
         offsetX = Random.Range(0, 100);
         offsetY = Random.Range(0, 100);
@@ -59,7 +65,6 @@ public class GenerateWorld : MonoBehaviour
 
     private void Update()
     {
-        CreateShape();
         updateMesh();
     }
 
@@ -80,7 +85,7 @@ public class GenerateWorld : MonoBehaviour
                 perlinNoiseY = (n1 * n2 * n3) + 20;
                 perlinNoiseY /= fallOffValue(i,j);
 
-                verticies[index] = new Vector3(j * spacedout, perlinNoiseY, i * spacedout);
+                verticies[index] = new Vector3(j * spacedout + Random.Range(0, 10), perlinNoiseY, i * spacedout + Random.Range(0, 10));
 
                 index++;
             }

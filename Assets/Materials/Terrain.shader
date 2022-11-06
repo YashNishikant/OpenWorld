@@ -13,7 +13,7 @@
           struct Input {
               float3 customColor;
               float3 worldNormal;
-              
+              float3 worldPos;
           };
 
         void vert(inout appdata_full v, out Input o) {
@@ -27,22 +27,31 @@
 
         void surf(Input IN, inout SurfaceOutput o) {
 
+                
               float3 worldNormal = WorldNormalVector(IN, o.Normal);
               half w = dot(worldNormal, normalize(half3(0, 1, 0)));
+              half h = IN.worldPos.y;
 
               if (abs(w) < _AngleFloat4) { // flattest
                   IN.customColor = float3(0, 0.57, 0.4);
               }
               if (abs(w) < _AngleFloat3) { // second flattest
-                  IN.customColor = float3(0, 0.6, 0.35);
+                    IN.customColor = float3(0, 0.6, 0.35);
               }
               if (abs(w) < _AngleFloat2) { // second steepest
                   IN.customColor = float3(0.53, 0.41, 0);
               }
-              if (abs(w) < _AngleFloat) { // steepest
-                  IN.customColor = float3(0.35, 0.27, 0);
+//              if (abs(w) < _AngleFloat) { // steepest
+//                  IN.customColor = float3(0.35, 0.27, 0);
+//              }
+
+              if (h < 10) {
+                  IN.customColor = float3(0.99, 0.86, 0.57);
               }
 
+              if (h > 88 && abs(w) > 0.5) {
+                  IN.customColor = float3(1, 1, 1);
+              }
 
               o.Albedo = IN.customColor;
         }
