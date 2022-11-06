@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
+
 
 [RequireComponent(typeof(MeshFilter))]
 public class GenerateWorld : MonoBehaviour
@@ -37,14 +38,8 @@ public class GenerateWorld : MonoBehaviour
     [SerializeField]
     private GameObject manager;
 
-    float randomX;
-    float randomZ;
-
     void Start()
-    {
-
-        randomX = Random.Range(0, 10);
-        randomZ = Random.Range(0, 10);
+    { 
 
         offsetX = Random.Range(0, 100);
         offsetY = Random.Range(0, 100);
@@ -151,6 +146,4 @@ public class GenerateWorld : MonoBehaviour
     {
         return spacedout * zSize;
     }
-
-
 }

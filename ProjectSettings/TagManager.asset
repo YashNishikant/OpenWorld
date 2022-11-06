@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Resource
   - Water
+  - placed
   layers:
   - Default
   - TransparentFX

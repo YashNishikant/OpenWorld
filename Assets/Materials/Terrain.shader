@@ -33,17 +33,14 @@
               half h = IN.worldPos.y;
 
               if (abs(w) < _AngleFloat4) { // flattest
-                  IN.customColor = float3(0, 0.57, 0.4);
+                  IN.customColor = float3(0.63, 0.82, 0.44);
               }
               if (abs(w) < _AngleFloat3) { // second flattest
-                    IN.customColor = float3(0, 0.6, 0.35);
+                    IN.customColor = float3(0.53, 0.41, 0);
               }
-              if (abs(w) < _AngleFloat2) { // second steepest
-                  IN.customColor = float3(0.53, 0.41, 0);
+              if (abs(w) < _AngleFloat2) { // steepest
+                  IN.customColor = float3(0.46, 0.46, 0.46);
               }
-//              if (abs(w) < _AngleFloat) { // steepest
-//                  IN.customColor = float3(0.35, 0.27, 0);
-//              }
 
               if (h < 10) {
                   IN.customColor = float3(0.99, 0.86, 0.57);
