@@ -32,16 +32,24 @@
               half w = dot(worldNormal, normalize(half3(0, 1, 0)));
               half h = IN.worldPos.y;
 
-              if (abs(w) < _AngleFloat4) { // flattest
-                  IN.customColor = float3(0.63, 0.82, 0.44);
+              //flat grass
+              if (abs(w) < _AngleFloat4) { 
+                  IN.customColor = float3(0.25, 0.35, 0.09) * (abs(w)*2);
               }
-              if (abs(w) < _AngleFloat3) { // second flattest
+              //hill brown
+              if (abs(w) < _AngleFloat3) { 
                     IN.customColor = float3(0.53, 0.41, 0);
               }
-              if (abs(w) < _AngleFloat2) { // steepest
+              //mountain gray
+              if (abs(w) < _AngleFloat2) { 
                   IN.customColor = float3(0.46, 0.46, 0.46);
               }
 
+              if (abs(w) < 0) {
+                  IN.customColor = float3(0.46, 0.46, 0.46);
+              }
+
+              //snow and sand
               if (h < 10) {
                   IN.customColor = float3(0.99, 0.86, 0.57);
               }

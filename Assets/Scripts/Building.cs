@@ -1,63 +1,107 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Building : MonoBehaviour
 {
 
-    RaycastHit hit;
-    public float dist;
-
-    public GameObject Cube;
-
-    int blockChoice = 0;
-
-    List<GameObject> BuildMaterial = new List<GameObject>();
-
-    private void Start()
-    {
-//        BuildMaterial.Add(WallSlab);
-//        BuildMaterial.Add(FloorSlab);
-//        BuildMaterial.Add(Beam);
-        BuildMaterial.Add(Cube);
-    }
+    private RaycastHit hit;
+    private bool building;
+    private bool firsttime;
+    private int blockChoice;
+    private Vector3 translatepos;
+    List<GameObject> holoList = new List<GameObject>();
+    GameObject h;
+    [SerializeField]
+    private float dist;
+    [SerializeField]
+    private List<GameObject> BuildPrefab = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> BuildHolographs = new List<GameObject>();
+    [SerializeField]
+    private Image crosshair;
+    [SerializeField]
+    private Image b_image;
 
     void Update()
     {
-        raycasting();
-        //changeBuild();
-    }
 
-    void changeBuild()
-    {
-
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            blockChoice++;
+            building = !building;
         }
 
-        if (blockChoice > BuildMaterial.Count - 1)
+        if (building)
         {
-            blockChoice = 0;
+            raycasting();
+            changeBuild();
+            b_image.enabled = true;
         }
-
-
+        else
+        {
+            b_image.enabled = false;
+            if(h != null)
+                Destroy(h.gameObject);
+            holoList.Clear();
+            destroy();
+        }
     }
 
-    void raycasting()
+    void destroy()
     {
-
         if (Input.GetMouseButtonDown(0))
         {
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, dist))
             {
                 if (hit.collider.tag == "placed")
                 {
-
                     Destroy(hit.transform.gameObject);
-
                 }
             }
+        }
+    }
+
+    void changeBuild()
+    {
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+        {
+            blockChoice++;
+        }
+
+        if (blockChoice > BuildPrefab.Count - 1)
+        {
+            blockChoice = 0;
+        }
+
+    }
+
+    void raycasting()
+    {
+
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, dist))
+        {
+            firsttime = true;
+
+            crosshair.enabled = true;
+
+            h = Instantiate(BuildHolographs[blockChoice], transform.TransformDirection(Vector3.forward), Quaternion.identity);
+            holoList.Add(h);
+            
+            if (holoList.Count > 1) {
+                Destroy(holoList[holoList.Count - 2].gameObject);
+                holoList.RemoveAt(holoList.Count - 2);
+            }
+
+            h.SetActive(true);
+            determineplacement(h, hit);
+        }
+        else if(firsttime)
+        {
+            crosshair.enabled = false;
+            if(holoList.Count > 0)
+            holoList[holoList.Count - 1].gameObject.SetActive(false);
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -66,70 +110,63 @@ public class Building : MonoBehaviour
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, dist))
             {
 
-                GameObject floor = Instantiate(BuildMaterial[blockChoice]) as GameObject;
+                if (blockChoice == 0)
+                    translatepos = hit.transform.localScale;
 
-                floor.transform.position = hit.point + hit.normal;
+                if (blockChoice == 1)
+                    translatepos = hit.transform.localScale * 2;
 
-                if (Physics.Raycast(floor.transform.position, Vector3.left, out hit, floor.transform.localScale.x))
-                {
+                GameObject item = Instantiate(BuildPrefab[blockChoice]) as GameObject;
+                determineplacement(item, hit);
+            }
+        }
+    }
 
-                    if (hit.collider.tag.Equals("placed"))
-                    {
-                        floor.transform.position = hit.transform.position + new Vector3(hit.transform.localScale.x, 0, 0);
+    void determineplacement(GameObject item, RaycastHit hit2)
+    {
 
-                    }
-                    return;
-                }
+        item.transform.position = hit2.point + hit2.normal;
 
-                if (Physics.Raycast(floor.transform.position, Vector3.right, out hit, floor.transform.localScale.x))
-                {
-                    if (hit.collider.tag.Equals("placed"))
-                    {
-                        floor.transform.position = hit.transform.position + new Vector3(-hit.transform.localScale.x, 0, 0);
+        if (hit.collider.tag.Equals("placed"))
+        {
 
-                    }
-                    return;
-                }
+            if (Physics.Raycast(item.transform.position, Vector3.left, out hit, item.transform.localScale.x))
+            {
+                item.transform.position = hit.transform.position + new Vector3(translatepos.x, 0, 0);
+                return;
+            }
 
-                if (Physics.Raycast(floor.transform.position, Vector3.forward, out hit, floor.transform.localScale.z))
-                {
-                    if (hit.collider.tag.Equals("placed"))
-                    {
-                        floor.transform.position = hit.transform.position + new Vector3(0, 0, -hit.transform.localScale.z);
+            if (Physics.Raycast(item.transform.position, Vector3.right, out hit, item.transform.localScale.x))
+            {
+                item.transform.position = hit.transform.position + new Vector3(-translatepos.x, 0, 0);
+                return;
+            }
 
-                    }
-                    return;
-                }
+            if (Physics.Raycast(item.transform.position, Vector3.forward, out hit, item.transform.localScale.z))
+            {
+                item.transform.position = hit.transform.position + new Vector3(0, 0, -translatepos.z);
+                return;
+            }
 
-                if (Physics.Raycast(floor.transform.position, Vector3.back, out hit, floor.transform.localScale.z))
-                {
-                    if (hit.collider.tag.Equals("placed"))
-                    {
-                        floor.transform.position = hit.transform.position + new Vector3(0, 0, hit.transform.localScale.z);
+            if (Physics.Raycast(item.transform.position, Vector3.back, out hit, item.transform.localScale.z))
+            {
+                item.transform.position = hit.transform.position + new Vector3(0, 0, translatepos.z);
+                return;
+            }
 
-                    }
-                    return;
-                }
+            if (Physics.Raycast(item.transform.position, Vector3.down, out hit, item.transform.localScale.y))
+            {
+                item.transform.position = hit.transform.position + new Vector3(0, translatepos.y, 0);
+                return;
+            }
 
-                if (Physics.Raycast(floor.transform.position, Vector3.down, out hit, floor.transform.localScale.y))
-                {
-                    if (hit.collider.tag.Equals("placed"))
-                    {
-                        floor.transform.position = hit.transform.position + new Vector3(0, hit.transform.localScale.y, 0);
-                    }
-                    return;
-                }
-
-                if (Physics.Raycast(floor.transform.position, Vector3.up, out hit, floor.transform.localScale.y))
-                {
-                    if (hit.collider.tag.Equals("placed"))
-                    {
-                        floor.transform.position = hit.transform.position + new Vector3(0, -hit.transform.localScale.y, 0);
-                    }
-                    return;
-                }
+            if (Physics.Raycast(item.transform.position, Vector3.up, out hit, item.transform.localScale.y))
+            {
+                item.transform.position = hit.transform.position + new Vector3(0, -translatepos.y, 0);
+                return;
             }
 
         }
+
     }
 }

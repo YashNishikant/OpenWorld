@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7776640812546920717}
   - component: {fileID: 7628737204872955057}
   - component: {fileID: 2830534638141918172}
-  - component: {fileID: 3666334858914417920}
   m_Layer: 0
   m_Name: Cube
   m_TagString: placed
@@ -59,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a939c11223ff99c409e4bce230f54fea, type: 2}
+  - {fileID: 2100000, guid: 4ab08e0223ec3864bbeaa8ff48d83e8c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -80,19 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &3666334858914417920
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2319933112975698338}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8562863070842236209
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2418876623615591068}
   m_Layer: 0
-  m_Name: Wall
+  m_Name: HolographCube
   m_TagString: placed
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -78,6 +78,7 @@ public class GenerateWorld : MonoBehaviour
                 float n3 = n2 * 0.25f * 2 - 1;
 
                 perlinNoiseY = (n1 * n2 * n3) + 20;
+                
                 perlinNoiseY /= fallOffValue(i,j);
 
                 verticies[index] = new Vector3(j * spacedout + Random.Range(0, 10), perlinNoiseY, i * spacedout + Random.Range(0, 10));

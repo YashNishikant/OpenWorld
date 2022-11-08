@@ -4,16 +4,25 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 12f;
-    public CharacterController controller;
-    Vector3 velocity;
-    bool hitGround = false;
-    public float GroundDistance;
-    public float jumpHeight = 3f;
-    public float distToGround = 1f;
-    public Vector3 offsetRaycast;
-    public Camera maincamera;
-    public float gravity = -19.6f;
+    [SerializeField] private float speed;
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private float jumpHeight;
+    [SerializeField] private float distToGround;
+    [SerializeField] private float gravity;
+    private RaycastHit hit;
+    private Vector3 velocity;
+    private bool hitGround = false;
+
+    void Start()
+    {
+
+        if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
+            controller.enabled = false;
+            transform.position = hit.point + hit.normal*2;
+            controller.enabled = true;
+        }  
+    }
+
     void FixedUpdate()
     {
         playerMovement();
