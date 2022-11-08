@@ -11,6 +11,7 @@ public class Building : MonoBehaviour
     private bool firsttime;
     private int blockChoice;
     private Vector3 translatepos;
+    private Vector3 objrotation;
     List<GameObject> holoList = new List<GameObject>();
     GameObject h;
     [SerializeField]
@@ -88,7 +89,8 @@ public class Building : MonoBehaviour
 
             h = Instantiate(BuildHolographs[blockChoice], transform.TransformDirection(Vector3.forward), Quaternion.identity);
             holoList.Add(h);
-            
+            h.transform.Rotate(objrotation);
+
             if (holoList.Count > 1) {
                 Destroy(holoList[holoList.Count - 2].gameObject);
                 holoList.RemoveAt(holoList.Count - 2);
@@ -104,6 +106,15 @@ public class Building : MonoBehaviour
             holoList[holoList.Count - 1].gameObject.SetActive(false);
         }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            if (blockChoice == 2) {
+                objrotation += new Vector3(0, 90, 0);
+            }
+
+        }
+
         if (Input.GetMouseButtonDown(1))
         {
 
@@ -116,7 +127,11 @@ public class Building : MonoBehaviour
                 if (blockChoice == 1)
                     translatepos = hit.transform.localScale * 2;
 
+                if (blockChoice == 2)
+                    translatepos = hit.transform.localScale * 2;
+
                 GameObject item = Instantiate(BuildPrefab[blockChoice]) as GameObject;
+                item.transform.Rotate(objrotation);
                 determineplacement(item, hit);
             }
         }
