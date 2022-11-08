@@ -685,9 +685,11 @@ MonoBehaviour:
   BuildPrefab:
   - {fileID: 8562863070842236209, guid: 8bf2f95070d506245bf050702c296de5, type: 3}
   - {fileID: 3743042856638460592, guid: c87aed7baef858b4fac95ff2c266ea1f, type: 3}
+  - {fileID: 3743042856638460592, guid: 1919924955691784e8b8e8591cc79ea4, type: 3}
   BuildHolographs:
   - {fileID: 8562863070842236209, guid: 317864d03420203468ed0da47d86be30, type: 3}
   - {fileID: 8562863070842236209, guid: 11fba32c4f79ff94aaaacf791bfae8b5, type: 3}
+  - {fileID: 8562863070842236209, guid: 52d2d58c343f92749992a221cc35f54b, type: 3}
   crosshair: {fileID: 1287305692}
   b_image: {fileID: 1819228079}
 --- !u!1 &1092859166
