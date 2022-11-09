@@ -24,6 +24,12 @@ public class Building : MonoBehaviour
     private Image crosshair;
     [SerializeField]
     private Image b_image;
+    [SerializeField]
+    private Image selection;
+    [SerializeField]
+    private Image arrow;
+    [SerializeField]
+    private ParticleSystem destroyeffect;
 
     void Update()
     {
@@ -38,11 +44,13 @@ public class Building : MonoBehaviour
             raycasting();
             changeBuild();
             b_image.enabled = true;
+            selection.transform.gameObject.SetActive(true);
         }
         else
         {
             b_image.enabled = false;
-            if(h != null)
+            selection.transform.gameObject.SetActive(false);
+            if (h != null)
                 Destroy(h.gameObject);
             holoList.Clear();
             destroy();
@@ -51,13 +59,15 @@ public class Building : MonoBehaviour
 
     void destroy()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, dist))
             {
                 if (hit.collider.tag == "placed")
                 {
                     Destroy(hit.transform.gameObject);
+                    ParticleSystem de = Instantiate(destroyeffect, hit.point, Quaternion.identity);
+                    de.GetComponent<ParticleSystemRenderer>().material = hit.transform.gameObject.GetComponent<MeshRenderer>().material;
                 }
             }
         }
@@ -82,6 +92,8 @@ public class Building : MonoBehaviour
         {
             blockChoice = BuildPrefab.Count - 1;
         }
+
+        arrow.transform.position = new Vector3(1219.274f, (blockChoice-1)*70 + 505.17f, 0);
 
     }
 
