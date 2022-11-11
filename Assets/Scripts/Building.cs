@@ -9,7 +9,9 @@ public class Building : MonoBehaviour
     private RaycastHit hit;
     private bool building;
     private bool firsttime;
+    private bool buildselect;
     private int blockChoice;
+    private int matChoice;
     private Vector3 translatepos;
     private Vector3 objrotation;
     List<GameObject> holoList = new List<GameObject>();
@@ -17,17 +19,23 @@ public class Building : MonoBehaviour
     [SerializeField]
     private float dist;
     [SerializeField]
-    private List<GameObject> BuildPrefab = new List<GameObject>();
+    private List<GameObject> buildList = new List<GameObject>();
     [SerializeField]
-    private List<GameObject> BuildHolographs = new List<GameObject>();
+    private List<Material> MatList = new List<Material>();
+    [SerializeField]
+    private List<GameObject> holographList = new List<GameObject>();
     [SerializeField]
     private Image crosshair;
     [SerializeField]
     private Image b_image;
     [SerializeField]
-    private Image selection;
+    private Image selectionBuild;
     [SerializeField]
-    private Image arrow;
+    private Image arrow1;
+    [SerializeField]
+    private Image selectionTex;
+    [SerializeField]
+    private Image arrow2;
     [SerializeField]
     private ParticleSystem destroyeffect;
 
@@ -44,12 +52,14 @@ public class Building : MonoBehaviour
             raycasting();
             changeBuild();
             b_image.enabled = true;
-            selection.transform.gameObject.SetActive(true);
+            selectionBuild.transform.gameObject.SetActive(true);
+            selectionTex.transform.gameObject.SetActive(true);
         }
         else
         {
             b_image.enabled = false;
-            selection.transform.gameObject.SetActive(false);
+            selectionBuild.transform.gameObject.SetActive(false);
+            selectionTex.transform.gameObject.SetActive(false);
             if (h != null)
                 Destroy(h.gameObject);
             holoList.Clear();
@@ -76,25 +86,36 @@ public class Building : MonoBehaviour
     void changeBuild()
     {
 
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            buildselect = false;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            buildselect = true;
+        }
+
         if (Input.GetAxis("Mouse ScrollWheel") > 0f)
         {
-            blockChoice++;
+            if (buildselect)
+                blockChoice++;
+            else
+                matChoice++;
         }
         if (Input.GetAxis("Mouse ScrollWheel") < 0f)
         {
-            blockChoice--;
-        }
-        if (blockChoice > BuildPrefab.Count - 1)
-        {
-            blockChoice = 0;
-        }
-        if (blockChoice < 0)
-        {
-            blockChoice = BuildPrefab.Count - 1;
+            if (buildselect)
+                blockChoice--;
+            else
+                matChoice--;
         }
 
-        arrow.transform.position = new Vector3(1219.274f, (blockChoice-1)*70 + 505.17f, 0);
-
+        blockChoice = clampvalues<GameObject>(blockChoice, buildList);
+        matChoice = clampvalues<Material>(matChoice, MatList);
+        
+        if (buildselect)
+            arrow1.transform.position = new Vector3(1219.274f, (blockChoice-1)*70 + 505.17f, 0);
+        else
+            arrow2.transform.position = new Vector3(1106.724f, (matChoice-1) * 70 + 505.17f, 0);
     }
 
     void raycasting()
@@ -105,7 +126,7 @@ public class Building : MonoBehaviour
             firsttime = true;
             crosshair.enabled = true;
 
-            h = Instantiate(BuildHolographs[blockChoice], transform.TransformDirection(Vector3.forward), Quaternion.identity);
+            h = Instantiate(holographList[blockChoice], transform.TransformDirection(Vector3.forward), Quaternion.identity);
             holoList.Add(h);
             h.transform.Rotate(objrotation);
 
@@ -158,8 +179,14 @@ public class Building : MonoBehaviour
                 if (blockChoice == 2)
                     translatepos = hit.transform.localScale * 2;
 
-                GameObject item = Instantiate(BuildPrefab[blockChoice]) as GameObject;
+                GameObject item = Instantiate(buildList[blockChoice]) as GameObject;
                 item.transform.Rotate(objrotation);
+
+                for (int i = 0; i < item.transform.childCount; i++)
+                {
+                    item.transform.GetChild(i).GetComponent<MeshRenderer>().material = MatList[matChoice];
+                }
+
                 determineplacement(item, hit);
             }
         }
@@ -220,5 +247,19 @@ public class Building : MonoBehaviour
 
         }
 
+    int clampvalues<T>(int index, List<T> list) {
+
+        if (index > list.Count - 1)
+        {
+            index = 0;
+        }
+        if (index < 0)
+        {
+            index = list.Count - 1;
+        }
+
+        return index;
+
     }
 
+}
