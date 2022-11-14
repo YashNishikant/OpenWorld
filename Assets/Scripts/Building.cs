@@ -64,6 +64,7 @@ public class Building : MonoBehaviour
                 Destroy(h.gameObject);
             holoList.Clear();
             destroy();
+            crosshair.enabled = true;
         }
     }
 
@@ -86,7 +87,8 @@ public class Building : MonoBehaviour
     void changeBuild()
     {
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) 
+        {
             buildselect = false;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -111,11 +113,12 @@ public class Building : MonoBehaviour
 
         blockChoice = clampvalues<GameObject>(blockChoice, buildList);
         matChoice = clampvalues<Material>(matChoice, MatList);
-        
+
+
         if (buildselect)
-            arrow1.transform.position = new Vector3(1219.274f, (blockChoice-1)*70 + 505.17f, 0);
+            arrow1.transform.position = new Vector3(arrow1.transform.position.x, selectionBuild.transform.position.y + (blockChoice-1)*70, arrow1.transform.position.z);
         else
-            arrow2.transform.position = new Vector3(1106.724f, (matChoice-1) * 70 + 505.17f, 0);
+            arrow2.transform.position = new Vector3(arrow2.transform.position.x, selectionTex.transform.position.y + (matChoice - 1) * 70, arrow2.transform.position.z);
     }
 
     void raycasting()
